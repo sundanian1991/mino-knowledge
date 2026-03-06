@@ -31,12 +31,25 @@ daily (日) → observations (月) → weekly (周) → 长期记忆
 
 触发"观察"来说记录洞察。
 
-## Quick Start
+---
 
-```bash
-git pull
-# 开始对话
+## 双文件夹架构
+
+| 维度 | **nomi** | **Mino** |
+|------|---------|----------|
+| **路径** | `~/.myagents/projects/mino` | `~/Documents/projects/ai-agents/my-agent` |
+| **角色** | 活力自主的探索者 | 深度工作的伙伴 |
+| **用途** | MyAgents 轻量入口、新想法试验田 | 主力生产环境、业务沉淀 |
+| **风格** | 轻量、敢尝试、快速迭代 | 厚重、稳扎稳打 |
+
+**工作流**：
 ```
+MyAgents 启动 → nomi
+       ↓
+需要深度工作 → git pull my-agent → 在 Mino 中执行
+```
+
+两边独立演进，互不干扰。
 
 ---
 

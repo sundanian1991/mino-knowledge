@@ -1,11 +1,13 @@
 ---
-name: "观察者"
+name: "observer"
 description: "手动执行对话洞察分析"
 ---
 
 # 观察者
 
-> 触发："观察" 或 "总结观察"
+> 触发："观察" 或 "/observer"
+>
+> 自动执行：写当前对话摘要 → 读取所有 sessions → 跨对话分析
 
 ---
 
@@ -52,12 +54,39 @@ P2-daily (日) → P2-observations (月) → P2-weekly (周) → 长期记忆
 
 ## 执行
 
-1. 回顾对话
-2. 提炼 3 个维度
-3. **同时做三件事**：
-   - 有事实值得记录 → 写入 `memory/P2-daily/YYYY-MM-DD.md`
-   - 有洞察值得沉淀 → 追加写入 `memory/P2-observations/YYYY-MM.md`
-   - **运行索引更新脚本** → 自动同步 `.abstract`
+### 步骤 1: 写当前对话摘要
+
+自动创建 `memory/P2-daily/sessions/session-YYYY-MM-DD-HHMM.md`
+
+### 步骤 2: 读取所有对话
+
+```bash
+ls -t memory/P2-daily/sessions/session-*.md | head -20
+```
+
+### 步骤 3: 分析三个维度
+
+1. **需求洞察**：表面问 A，实际解决 B？
+2. **模式信号**：跨对话反复出现的信号？趋势？
+3. **我的复盘**：这次交互中学到了什么？
+
+### 步骤 4: 同时做三件事
+
+- 有事实 → 写入 `memory/P2-daily/YYYY-MM-DD.md`
+- 有洞察 → 追加写入 `memory/P2-observations/YYYY-MM.md`
+- 运行索引更新 → 自动同步 `.abstract`
+
+---
+
+## 跨对话模式信号分析
+
+**触发条件**：读取 sessions/ 下最近 10-20 个对话摘要
+
+**分析维度**：
+- 高频主题：反复出现的话题
+- 时间模式：工作时段、强度
+- 决策风格：快速决策 vs 深度思考
+- 情绪状态：焦虑、兴奋、疲惫等信号
 
 ---
 

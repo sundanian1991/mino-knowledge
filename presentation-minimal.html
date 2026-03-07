@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>定价委员会机制策略组讨论 - Clean Minimal</title>
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&f[]=general-sans@300,400,500,600&display=swap">
+    <style>
+        /* ===========================================
+           VIEWPORT FITTING: MANDATORY BASE STYLES
+           确保每页幻灯片恰好适应视口，无滚动
+           =========================================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            height: 100%;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            background: #fafafa;
+        }
+
+        body {
+            height: 100%;
+            font-family: 'General Sans', sans-serif;
+            overflow-x: hidden;
+            background: #fafafa;
+            color: #1a1a1a;
+        }
+
+        :root {
+            /* Colors */
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-card: #f5f5f5;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --accent: #e74c3c;
+            --accent-soft: rgba(231, 76, 60, 0.08);
+            --accent-light: rgba(231, 76, 60, 0.15);
+            --border: #e0e0e0;
+            --success: #27ae60;
+            --warning: #f39c12;
+
+            /* Typography - 响应式缩放 */
+            --title-size: clamp(1.75rem, 4.5vw, 3rem);
+            --subtitle-size: clamp(1rem, 2vw, 1.25rem);
+            --h2-size: clamp(1.25rem, 3vw, 2rem);
+            --h3-size: clamp(1rem, 2vw, 1.25rem);
+            --body-size: clamp(0.8rem, 1.3vw, 1rem);
+            --small-size: clamp(0.7rem, 1.1vw, 0.875rem);
+            --caption-size: clamp(0.65rem, 1vw, 0.75rem);
+
+            /* Spacing - 响应式缩放 */
+            --slide-padding: clamp(1.5rem, 4vw, 3rem);
+            --content-gap: clamp(0.75rem, 1.5vw, 1.5rem);
+            --element-gap: clamp(0.5rem, 1vw, 1rem);
+        }
+
+        /* ===========================================
+           SLIDE CONTAINER - 每页 = 精确视口高度
+           =========================================== */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            padding: var(--slide-padding);
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent) 0%, #f39c12 50%, #3498db 100%);
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .slide-content.center {
+            align-items: center;
+            text-align: center;
+        }
+
+        /* ===========================================
+           TYPOGRAPHY
+           =========================================== */
+        .eyebrow {
+            font-size: var(--caption-size);
+            color: var(--accent);
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            margin-bottom: var(--element-gap);
+            text-transform: uppercase;
+        }
+
+        .slide-title {
+            font-family: 'Satoshi', sans-serif;
+            font-size: var(--title-size);
+            font-weight: 900;
+            color: var(--text-primary);
+            line-height: 1.1;
+            margin-bottom: var(--content-gap);
+            letter-spacing: -0.02em;
+        }
+
+        .slide-subtitle {
+            font-size: var(--subtitle-size);
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .section-heading {
+            font-family: 'Satoshi', sans-serif;
+            font-size: var(--h2-size);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--content-gap);
+            letter-spacing: -0.01em;
+        }
+
+        /* ===========================================
+           CARDS & GRIDS
+           =========================================== */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 8px;
+            padding: clamp(0.75rem, 1.5vw, 1.25rem);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .card.no-accent {
+            border-left: 3px solid var(--border);
+        }
+
+        .card.success {
+            border-left-color: var(--success);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--content-gap);
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--content-gap);
+        }
+
+        /* ===========================================
+           LISTS
+           =========================================== */
+        .bullet-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--element-gap);
+        }
+
+        .bullet-list li {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .bullet-list li::before {
+            content: '•';
+            color: var(--accent);
+            font-size: 1.2em;
+            line-height: 1;
+        }
+
+        /* ===========================================
+           TABLES
+           =========================================== */
+        .table-container {
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--small-size);
+        }
+
+        th {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-weight: 600;
+            text-align: left;
+            padding: 0.75rem 0.8rem;
+            font-size: var(--caption-size);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        td {
+            padding: 0.6rem 0.8rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===========================================
+           PROCESS FLOW
+           =========================================== */
+        .process-flow {
+            display: flex;
+            align-items: center;
+            gap: var(--element-gap);
+            flex-wrap: wrap;
+        }
+
+        .process-step {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.6rem 0.8rem;
+            text-align: center;
+            flex: 1;
+            min-width: fit-content;
+        }
+
+        .process-step strong {
+            color: var(--accent);
+            font-size: var(--small-size);
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .process-step span {
+            color: var(--text-secondary);
+            font-size: var(--caption-size);
+        }
+
+        .process-arrow {
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        /* ===========================================
+           TAGS & BADGES
+           =========================================== */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1.25rem;
+            background: var(--accent-soft);
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
+            font-size: var(--caption-size);
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* ===========================================
+           ANIMATIONS
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .reveal:nth-child(1) { animation-delay: 0.05s; }
+        .reveal:nth-child(2) { animation-delay: 0.15s; }
+        .reveal:nth-child(3) { animation-delay: 0.25s; }
+        .reveal:nth-child(4) { animation-delay: 0.35s; }
+        .reveal:nth-child(5) { animation-delay: 0.45s; }
+
+        @keyframes reveal {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===========================================
+           RESPONSIVE BREAKPOINTS
+           =========================================== */
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(1rem, 3vw, 2rem);
+                --content-gap: clamp(0.5rem, 1.2vw, 1rem);
+                --title-size: clamp(1.5rem, 4vw, 2.5rem);
+            }
+        }
+
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(0.75rem, 2.5vw, 1.5rem);
+                --title-size: clamp(1.25rem, 3.5vw, 2rem);
+                --h2-size: clamp(1rem, 2.5vw, 1.5rem);
+            }
+
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .process-flow {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .process-arrow {
+                transform: rotate(90deg);
+                text-align: center;
+                padding: 0.25rem 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        /* ===========================================
+           NAVIGATION DOTS
+           =========================================== */
+        .nav-dots {
+            position: fixed;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            z-index: 100;
+        }
+
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border);
+            border: 2px solid var(--bg-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: scale(1.2);
+        }
+
+        .nav-dot:hover {
+            background: var(--accent);
+            opacity: 0.8;
+        }
+
+        /* ===========================================
+           KEYBOARD HINT
+           =========================================== */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: var(--caption-size);
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Dots -->
+    <nav class="nav-dots" id="navDots"></nav>
+
+    <!-- Keyboard Hint -->
+    <p class="keyboard-hint">使用 ↑↓ 方向键或滚动导航</p>
+
+    <!-- Slide 1: 封面 -->
+    <section class="slide">
+        <div class="slide-content center">
+            <p class="eyebrow reveal">定价委员会机制</p>
+            <h1 class="slide-title reveal">通气讨论会议</h1>
+            <p class="slide-subtitle reveal">建立有约束、有代表、有复盘的定价决策机制</p>
+            <div class="tag reveal" style="margin-top: 2rem;">2026 年 3 月 </div>
+        </div>
+    </section>
+
+    <!-- Slide 2: 背景与目标 -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="eyebrow reveal">01 / 背景与目标</p>
+            <h2 class="section-heading reveal">为什么要建这个机制？</h2>
+
+            <div class="grid-2" style="margin-top: 1rem;">
+                <div class="card reveal">
+                    <h3 style="font-size: var(--h3-size); color: var(--text-primary); margin-bottom: 0.75rem; font-weight: 600;">当前问题</h3>
+                    <ul class="bullet-list">
+                        <li>定价调整 — 京东单方面决策，缺乏供应商声音</li>
+                        <li>降幅约束 — 较大幅度调整，超出心理承受</li>
+                        <li>复盘机制 — 调整完需追踪，吸收定价调整经验</li>
+                    </ul>
+                </div>
+
+                <div class="card reveal success">
+                    <h3 style="font-size: var(--h3-size); color: var(--text-primary); margin-bottom: 0.75rem; font-weight: 600;">建设目标</h3>
+                    <ul class="bullet-list">
+                        <li>从"事后救火"转向"事前防火"</li>
+                        <li>有约束的决策机制（单次≤30%、次月生效）</li>
+                        <li>有代表的委员会（供应商管理、量化、业管、服务组、策略组管理者）</li>
+                        <li>有复盘的闭环（每次调整后追踪效果）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: 组织架构 -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="eyebrow reveal">02 / 组织架构</p>
+            <h2 class="section-heading reveal">5 人委员会 + C2 终审</h2>
+
+            <div class="table-container reveal" style="margin-top: 1rem;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="15%">角色</th>
+                            <th width="25%">人员</th>
+                            <th width="60%">主要职责</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color: var(--text-primary);">秘书长兼委员</strong></td>
+                            <td>供应商管理岗</td>
+                            <td>组织会议、收集材料、追踪落地、归档记录、供应商意见收集</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="4"><strong style="color: var(--text-primary);">委员</strong></td>
+                            <td>业务督导代表</td>
+                            <td>坐席层面信息（收入增减对业务的影响）</td>
+                        </tr>
+                        <tr>
+                            <td>量化代表</td>
+                            <td>数据测算、ROI 分析</td>
+                        </tr>
+                        <tr>
+                            <td>服务组负责人 C3</td>
+                            <td>业务运营、职场管理</td>
+                        </tr>
+                        <tr>
+                            <td>策略组负责人 C3</td>
+                            <td>定价策略、规则设计</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: var(--success);">终审</strong></td>
+                            <td>数据科技业务部负责人 C2</td>
+                            <td>每项调整的最终审批</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card reveal no-accent" style="margin-top: 1rem; padding: 0.75rem 1rem;">
+                <strong style="color: var(--accent); font-size: var(--small-size);">表决规则：</strong>
+                <span style="color: var(--text-secondary); font-size: var(--small-size); margin-left: 0.5rem;">
+                    常规≤15% → 3/5 通过 | 重大>15% → 4/5 通过 + C2 终审 | 每项调整 → C2 终审
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 4: 核心流程 -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="eyebrow reveal">03 / 核心流程</p>
+            <h2 class="section-heading reveal">提案 → 评审 → 终审 → 生效 → 复盘</h2>
+
+            <div class="process-flow reveal" style="margin-top: 1rem;">
+                <div class="process-step">
+                    <strong>阶段 1</strong>
+                    <span>提案<br>T-5 天</span>
+                </div>
+                <span class="process-arrow">→</span>
+                <div class="process-step">
+                    <strong>阶段 2</strong>
+                    <span>初审 + 评审<br>T-2 天</span>
+                </div>
+                <span class="process-arrow">→</span>
+                <div class="process-step">
+                    <strong>阶段 3</strong>
+                    <span>终审<br>T-1 天</span>
+                </div>
+                <span class="process-arrow">→</span>
+                <div class="process-step">
+                    <strong>阶段 4</strong>
+                    <span>生效<br>次月 1 日</span>
+                </div>
+                <span class="process-arrow">→</span>
+                <div class="process-step">
+                    <strong>阶段 5</strong>
+                    <span>复盘<br>+30 天</span>
+                </div>
+            </div>
+
+            <div class="table-container reveal" style="margin-top: 1.25rem;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="25%">红线</th>
+                            <th width="35%">标准</th>
+                            <th width="40%">例外处理</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color: var(--accent);">单次降幅</strong></td>
+                            <td>≤30%</td>
+                            <td>超过需分 2 次执行</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: var(--accent);">生效时间</strong></td>
+                            <td>次月 1 日</td>
+                            <td>当月审批，避免突发冲击</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: var(--accent);">调整频次</strong></td>
+                            <td> 季度调整一次</td>
+                            <td>特殊调整单独申请</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 5: 策略组的角色 -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="eyebrow reveal">04 / 策略组的角色</p>
+            <h2 class="section-heading reveal">策略组在委员会中要做什么？</h2>
+
+            <div class="table-container reveal" style="margin-top: 0.5rem;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="25%">职责</th>
+                            <th width="45%">说明</th>
+                            <th width="30%">时间投入</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>提案发起</td>
+                            <td>市场变化、成本变动时发起调整</td>
+                            <td>15-30 分钟/次</td>
+                        </tr>
+                        <tr>
+                            <td>评审参与</td>
+                            <td>每月评审会，投票表决</td>
+                            <td>60-90 分钟/月</td>
+                        </tr>
+                        <tr>
+                            <td>策略意见</td>
+                            <td>提供定价策略专业意见</td>
+                            <td>按需沟通</td>
+                        </tr>
+                        <tr>
+                            <td>复盘参与</td>
+                            <td>调整后 30 天复盘</td>
+                            <td>30-60 分钟/次</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <div class="card reveal no-accent" style="flex: 1; padding: 0.75rem 1rem;">
+                    <strong style="color: var(--accent); font-size: var(--small-size);">合计时间：</strong>
+                    <span style="color: var(--text-secondary); font-size: var(--small-size); margin-left: 0.5rem;">1.5-2.5 小时/月</span>
+                </div>
+                <div class="card reveal success" style="flex: 1; padding: 0.75rem 1rem;">
+                    <strong style="color: var(--success); font-size: var(--small-size);">收益：</strong>
+                    <span style="color: var(--text-secondary); font-size: var(--small-size); margin-left: 0.5rem;">决策质量↑ 风险↓</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 6: 下一步 -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="eyebrow reveal">05 / 下一步</p>
+            <h2 class="section-heading reveal">试运行计划（3 月）</h2>
+
+            <div class="table-container reveal" style="margin-top: 0.5rem;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="25%">时间</th>
+                            <th width="40%">动作</th>
+                            <th width="35%">产出</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>3 月第一周</td>
+                            <td>收集 1-2 个待审提案</td>
+                            <td>试跑流程</td>
+                        </tr>
+                        <tr>
+                            <td>3 月第二周</td>
+                            <td>首次评审会</td>
+                            <td>会议纪要</td>
+                        </tr>
+                        <tr>
+                            <td>3 月第三周</td>
+                            <td>处理供应商反馈</td>
+                            <td>反馈处理记录</td>
+                        </tr>
+                        <tr>
+                            <td>3 月第四周</td>
+                            <td>复盘试运行效果</td>
+                            <td>试运行复盘报告</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <div class="card reveal" style="flex: 1;">
+                    <strong style="color: var(--accent); font-size: var(--caption-size); display: block; margin-bottom: 0.5rem; font-weight: 600;">✅ 今天需要确认</strong>
+                    <ol style="margin: 0; padding-left: 1.25rem; font-size: var(--small-size); color: var(--text-secondary); line-height: 1.6;">
+                        <li>策略组角色与权责</li>
+                        <li>流程与红线</li>
+                        <li>试运行计划</li>
+                    </ol>
+                </div>
+                <div class="card reveal no-accent" style="flex: 1;">
+                    <strong style="color: var(--success); font-size: var(--caption-size); display: block; margin-bottom: 0.5rem; font-weight: 600;">会后行动</strong>
+                    <ul class="bullet-list" style="font-size: var(--small-size);">
+                        <li>24 小时内：发送会议纪要</li>
+                        <li>3 天内：更新机制 V1.1</li>
+                        <li>1 周内：与产线/经分对齐</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        /* ===========================================
+           SLIDE PRESENTATION CONTROLLER
+           处理导航、动画和交互
+           =========================================== */
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.currentIndex = 0;
+                this.initNavDots();
+                this.bindEvents();
+                this.updateActiveSlide();
+            }
+
+            initNavDots() {
+                const navDots = document.getElementById('navDots');
+                this.slides.forEach((_, index) => {
+                    const dot = document.createElement('button');
+                    dot.className = 'nav-dot' + (index === 0 ? ' active' : '');
+                    dot.addEventListener('click', () => this.goToSlide(index));
+                    navDots.appendChild(dot);
+                });
+                this.navDotElements = navDots.querySelectorAll('.nav-dot');
+            }
+
+            bindEvents() {
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+                        e.preventDefault();
+                        this.nextSlide();
+                    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        this.prevSlide();
+                    }
+                });
+
+                // Scroll navigation with throttle
+                let isScrolling = false;
+                document.addEventListener('scroll', () => {
+                    if (!isScrolling) {
+                        isScrolling = true;
+                        setTimeout(() => {
+                            this.updateActiveSlide();
+                            isScrolling = false;
+                        }, 100);
+                    }
+                });
+
+                // Touch support
+                let touchStartY = 0;
+                document.addEventListener('touchstart', (e) => {
+                    touchStartY = e.touches[0].clientY;
+                });
+
+                document.addEventListener('touchend', (e) => {
+                    const touchEndY = e.changedTouches[0].clientY;
+                    const diff = touchStartY - touchEndY;
+                    if (Math.abs(diff) > 50) {
+                        if (diff > 0) this.nextSlide();
+                        else this.prevSlide();
+                    }
+                });
+            }
+
+            updateActiveSlide() {
+                const scrollPosition = window.scrollY + window.innerHeight / 2;
+                this.slides.forEach((slide, index) => {
+                    const slideTop = slide.offsetTop;
+                    const slideBottom = slideTop + slide.offsetHeight;
+                    if (scrollPosition >= slideTop && scrollPosition < slideBottom) {
+                        this.currentIndex = index;
+                        slide.classList.add('visible');
+                    }
+                    this.navDotElements[index].classList.toggle('active', index === this.currentIndex);
+                });
+            }
+
+            nextSlide() {
+                if (this.currentIndex < this.slides.length - 1) {
+                    this.goToSlide(this.currentIndex + 1);
+                }
+            }
+
+            prevSlide() {
+                if (this.currentIndex > 0) {
+                    this.goToSlide(this.currentIndex - 1);
+                }
+            }
+
+            goToSlide(index) {
+                this.slides[index].scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new SlidePresentation();
+        });
+    </script>
+</body>
+</html>

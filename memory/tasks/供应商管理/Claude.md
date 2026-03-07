@@ -1,3 +1,10 @@
+---
+pos: memory/tasks/供应商管理/Claude.md
+input: memory/tasks/供应商管理 需求
+output: Claude.md
+update: 内容变更时更新
+---
+
 # 供应商管理体系 - 模块配置
 
 > 本模块的核心定位、功能约束、业务清单

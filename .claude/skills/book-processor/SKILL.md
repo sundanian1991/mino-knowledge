@@ -1,3 +1,8 @@
+---
+name: book-processor
+description: "书籍深度处理 Skill"
+---
+
 # Book Processor - 书籍深度处理 Skill
 
 > 📚 将 PDF 书籍转换为带批注、总结、中英对照的深度学习笔记

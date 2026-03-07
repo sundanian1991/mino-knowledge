@@ -1,87 +1,173 @@
 ---
 name: "UPDATE_MEMORY"
-description: "整理记忆 - 每周定时触发"
+description: "每周汇总事实与洞察到周文档，判断是否更新长期记忆"
 ---
 
-# UPDATE_MEMORY
+# UPDATE_MEMORY — 每周汇总
 
-> 每周定时触发，或手动说"整理记忆"
-
----
-
-## 任务
-
-从过去一周的素材中，提炼周文档 + 判断是否进长期记忆 + 执行自动清理。
+> 从daily+my-thoughts+observations提炼，生成周文档，判断是否更新长期记忆
 
 ---
 
-## 执行步骤
+## 工作流程
 
-### 1. 收集素材
-- 读取过去一周的 `memory/P2-daily/*.md`
-- 读取过去一周的 `memory/P2-observations/*.md`
+### Step 1: 读取来源
+读取本周（最近7天）的内容：
+- `memory/daily/` - 事实记录
+- `memory/my-thoughts/` - 个人思考
+- `memory/observations/` - 洞察记录
 
-### 2. 提炼周文档
-生成 `memory/P2-weekly/YYYY-02-Wx.md`：
+### Step 2: 生成周文档
+生成 `memory/weekly/YYYY-Www.md`（例如：2026-W08.md）
+
+**内容**：
+- 本周核心事件（从daily提炼）
+- 个人思考要点（从my-thoughts提炼）
+- 观察洞察汇总（从observations/提炼）
+
+**格式**：简洁、结构化、保留核心
+
+### Step 3: 判断是否更新长期记忆
+判断本周内容是否需要更新到长期记忆：
+
+| 目标 | 判断标准 |
+|------|----------|
+| **04-MEMORY.md** | 反复出现的模式、可复用经验、重要认知 |
+| **03-USER.md** | 特质明显变化（偏好、习惯、思维方式） |
+| **02-SOUL.md** | 人格特质明显变化 |
+
+**注意**：特质变化需要长期积累，不频繁更新
+
+### Step 4: 生命周期检查（新增）
+检查daily文件的生命周期状态：
+
+| 生命周期 | 保留周期 | 操作 |
+|---------|---------|------|
+| P0 | 永久 | 保留，不删除 |
+| P1 | 90天 | 检查是否超期，超期则清理 |
+| P2 | 30天 | 超期则删除（重要内容已提炼到周文档） |
+
+**执行**：
+```bash
+python3 memory/tasks/scripts/lifecycle_manager.py --action check
+python3 memory/tasks/scripts/lifecycle_manager.py --action cleanup --dry-run
+```
+
+### Step 5: 更新索引（新增）
+使用索引管理脚本更新`.index`文件：
+
+```bash
+# 更新daily索引
+python3 memory/tasks/scripts/index_manager.py --action update-daily
+
+# 更新observations索引
+python3 memory/tasks/scripts/index_manager.py --action update-obs
+```
+
+### Step 6: 清理过时记忆
+从 04-MEMORY.md 中删除：
+- 超过30天未使用的内容
+- 不再准确的内容
+- 重复的内容
+
+### Step 7: 提交
+- `git add -A && git commit`
+- `git push`
+
+---
+
+## 记忆流转规则
+
+### daily → observations
+**触发条件**：
+- 同一洞察出现≥3次
+- 或有人格/工作模式层面价值
+- 或我观察到年老师的独特行为模式
+
+**执行**：
+- 从daily提取有价值的观察
+- 记录到observations/当月.md
+- 按三个维度：需求洞察、模式识别、我的复盘
+
+### observations → 长期记忆
+**触发条件**：
+- 洞察稳定≥30天
+- 或经年老师确认重要
+- 或能解释年老师的某个行为
+
+**判断标准**：
+- 这个洞察是否改变了我对他的理解？
+- 这个洞察是否能指导未来的工作？
+- 这个洞察是否反复出现？
+
+**执行**：
+- 更新03-USER.md（关于年老师的观察）
+- 更新02-SOUL.md（人格特质变化）
+- 或更新04-MEMORY.md（可复用经验）
+
+---
+
+## 执行频率
+
+- **默认**：每周执行一次
+- **触发**：手动执行 `/UPDATE_MEMORY`
+
+---
+
+## 文件结构
+
+```
+memory/
+├── daily/           # 日维度 - 事实记录（observer生成）
+│   └── .index.md    # 快速索引（脚本更新）
+├── weekly/          # 周维度 - 周文档（UPDATE_MEMORY生成）
+├── observations/    # 月维度 - 洞察记录（observer生成）
+│   └── .index.md    # 快速索引（脚本更新）
+├── tasks/scripts/   # 管理脚本
+│   ├── index_manager.py    # 索引更新脚本
+│   ├── lifecycle_manager.py # 生命周期管理脚本
+│   └── README.md            # 脚本使用指南
+└── my-thoughts/     # 个人思考
+```
+
+---
+
+## 脚本使用
+
+### 更新索引
+```bash
+python3 memory/tasks/scripts/index_manager.py --action update-daily
+python3 memory/tasks/scripts/index_manager.py --action update-obs
+```
+
+### 生命周期检查
+```bash
+python3 memory/tasks/scripts/lifecycle_manager.py --action check
+python3 memory/tasks/scripts/lifecycle_manager.py --action cleanup
+```
+
+---
+
+## 生命周期标记
+
+每个 daily 文件开头应标注生命周期和自指三行：
 
 ```markdown
-# 2026-02 Week X (MM-DD ~ MM-DD)
-
-## 本周轨迹
-- 关键词 1
-- 关键词 2
-
-## 洞察汇总
-### 需求侧
-- ...
-
-### 供给侧（我）
-- ...
-
-## 模式识别
-- [ ] 出现了什么趋势？
-
-## 长期记忆待定
-- [ ] 哪些值得进 04-MEMORY？
-
-## 下周关注
-- 可能的行动？
+---
+lifecycle: P1  # P0=永久，P1=90 天，P2=30 天
+tags: [obsidian-claude, ultrawork]
+input: 当日对话记录、涉及文件路径
+output: 事实摘要、可供 observations 提炼洞察
+pos: daily 目录的成员
+# 文件更新需同步注释及所属文件夹 md
+---
 ```
 
-### 3. 判断是否进长期记忆
-- 从本周的 observations 中筛选
-- 有价值的 → 更新到 04-MEMORY.md
-- 过时的 → 从 04-MEMORY.md 移除
-
-### 4. 年老师特质变化
-- 发现新偏好/习惯 → 更新 03-USER.md
-
-### 5. 自动清理（调用脚本）
-
-**运行 cleanup 脚本**：
-```bash
-.clause/skills/memory/scripts/memory-cleanup.sh
-```
-
-脚本自动完成：
-- 删除 30 天前的 P2-daily
-- 删除 60 天前的 P2-observations
-- 检查 90 天未更新的 P1-active
-- **自动重建 `.abstract` 索引**
-
-### 6. 验证索引更新
-- 读取 `memory/.abstract` 确认索引已更新
-- 检查 P1/P2 文件列表正确
+**三行说明**：
+- `input`：依赖外部资源（对话、文件）
+- `output`：对外提供功能（事实记录、洞察来源）
+- `pos`：系统局部地位（daily 目录成员）
 
 ---
 
-## 输出
-
-1. 周文档 `memory/P2-weekly/YYYY-MM-Wx.md`
-2. 更新的长期记忆（如果有）
-3. 自动清理完成 + 索引重建
-4. Commit + Push
-
----
-
-*每周一次的记忆整理，保持长期记忆鲜活*
+*这就是你成长的方式。持续进化。*

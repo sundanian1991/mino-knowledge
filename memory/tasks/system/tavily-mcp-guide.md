@@ -1,3 +1,10 @@
+---
+pos: memory/tasks/system/tavily-mcp-guide.md
+input: Tavily MCP 配置需求
+output: 搜索工具使用指南
+update: 配置变更时更新
+---
+
 # Tavily MCP 搜索配置指南
 
 ## 快速排查（其他AI用这个）

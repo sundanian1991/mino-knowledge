@@ -24,9 +24,8 @@ mino/                              # Your home
 │   └── WORK.md                   # Work handbook
 ├── .claude/commands/              # Slash commands
 │   ├── wake.md                   # Session start
-│   ├── observer.md               # Manual insight trigger
-│   └── UPDATE_MEMORY.md          # Weekly memory cleanup
-├── .claude/skills/               # Capabilities
+│   └── observer.md               # Manual insight trigger
+├── .claude/skills/               # Capabilities (memory-system, planning-with-files, etc.)
 ├── memory/                       # Memory system
 │   ├── daily/                    # Daily logs
 │   ├── observations/             # Monthly insights
@@ -49,8 +48,8 @@ Before doing anything:
 |------|------|------|------|
 | daily | 日 | 事实记录 | observer后 |
 | observations | 月 | 洞察记录 | observer后 |
-| weekly | 周 | 周文档 | UPDATE_MEMORY |
-| 长期记忆 | 长期 | 04-MEMORY/03-USER/02-SOUL | UPDATE_MEMORY判断 |
+| weekly | 周 | 周文档 | /memory-system |
+| 长期记忆 | 长期 | 04-MEMORY/03-USER/02-SOUL | /memory-system判断 |
 
 **流程**: `daily → observations → weekly → 长期记忆`
 
@@ -62,8 +61,8 @@ Before doing anything:
 |---------|------|
 | `/wake` | 会话启动 |
 | `/observer` | 手动触发洞察分析 |
-| `/UPDATE_MEMORY` | 每周记忆整理 |
-| `/plan` | 启动五文件工作流（复杂项目开发） |
+| `/memory-system` | 每周记忆整理 |
+| `/planning-with-files` | 启动五文件工作流（复杂项目开发） |
 
 ## 五文件工作流
 
@@ -85,7 +84,7 @@ Before doing anything:
 - 小里程碑 = 1-2 小时粒度
 - 强制验证 = 不通过禁止进入下一阶段
 
-**触发**：`/plan` 或 "启动五文件工作流"
+**触发**：`/planning-with-files` 或 "启动五文件工作流"
 
 ---
 
@@ -98,7 +97,7 @@ Before doing anything:
 | 层级 | 文件 | 作用 | 加载时机 |
 |------|------|------|----------|
 | 项目级 | `CLAUDE.md` `SYSTEM.md` | 项目入口 + 整体摘要 | 每次启动 |
-| 模块级 | `*/README.md` | 模块说明 + 文件清单 | 进入模块时 |
+| 模块级 | `*/CLAUDE.md` | 模块说明 + 文件清单 | 进入模块时 |
 | 文件级 | `---` 注释块 | 文件功能 + 依赖关系 | 按需加载 |
 
 ### 文件头规范
@@ -115,17 +114,18 @@ update: 更新方式
 ### 核心规则
 
 1. **改了代码必须更新文件头注释**
-2. **新增/删除文件必须更新文件夹 README**
+2. **新增/删除文件必须更新文件夹 CLAUDE.md**
 3. **模块结构变更必须更新 CLAUDE.md/SYSTEM.md**
 4. **检查工具**: `.scripts/check-docs-sync.sh`
+5. **Git hook**: pre-commit 自动检查头注释
 
 ### 模块状态
 
-| 模块 | README | 文件头注释 | 说明 |
+| 模块 | CLAUDE.md | 文件头注释 | 说明 |
 |------|--------|-----------|------|
-| `memory/` | ✅ | ✅ | L0/L1/L2 分层记忆 |
-| `tasks/` | ✅ | ⚠️ 部分 | 任务文档库 |
-| `.claude/` | ✅ | ⚠️ 部分 | 系统规则库 |
+| `memory/` | ✅ | ✅ | 子文件夹 CLAUDE.md 已补齐 |
+| `tasks/` | ✅ | ✅ | 任务文档库 |
+| `.claude/` | ✅ | ✅ | 子文件夹 CLAUDE.md 已补齐 |
 | `workspace/` | ✅ | ⚠️ 部分 | 临时工作区 |
 
 ---
@@ -135,7 +135,7 @@ update: 更新方式
 ### 文件 → 文件夹
 
 ```
-文件内容变更 → 更新文件头注释 → 更新文件夹 README.md 文件清单
+文件内容变更 → 更新文件头注释 → 更新文件夹 CLAUDE.md 文件清单
 ```
 
 ### 文件夹 → 根目录
@@ -149,6 +149,17 @@ update: 更新方式
 ```bash
 # 提交前检查文档同步
 .scripts/check-docs-sync.sh
+
+# Git pre-commit hook 自动检查新增 .md 文件的头注释
+git commit -m "xxx"
 ```
+
+### 新增文件操作清单
+
+1. 在文件顶部添加 `---` 头注释
+2. 更新所属文件夹的 CLAUDE.md
+3. 结构变更则更新 CLAUDE.md
+
+---
 
 *This is home. Commit + push when meaningful changes happen.*

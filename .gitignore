@@ -26,6 +26,16 @@ workspace/
 # Office schemas (all skills) - 这是最核心的排除
 **/office/schemas/
 
+# Other AI tools (prevent re-creation)
+.agent/
+.agents/
+.codebuddy/
+.iflow/
+.qoder/
+.qwen/
+.trae/
+.windsurf/
+
 # Temp and build files
 *.tmp
 *.bak

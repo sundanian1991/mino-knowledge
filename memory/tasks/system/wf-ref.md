@@ -1,3 +1,10 @@
+---
+pos: memory/tasks/system/wf-ref.md
+input: 工作流设计需求
+output: 透明工作机制规范
+update: 机制优化时更新
+---
+
 # 透明工作机制
 
 > 让年老师看到我的思考过程，不再是黑盒

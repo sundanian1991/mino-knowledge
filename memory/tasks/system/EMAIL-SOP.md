@@ -1,3 +1,10 @@
+---
+pos: memory/tasks/system/EMAIL-SOP.md
+input: 邮件发送需求
+output: 标准化邮件发送流程
+update: 流程变更时更新
+---
+
 # 邮件发送 SOP
 
 > 年老师的邮件工作流沉淀

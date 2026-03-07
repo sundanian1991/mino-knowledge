@@ -98,12 +98,18 @@ Filesystem = Disk（持久，无限）
 ```bash
 # 1. 初始化（一键创建 docs/目录 + 五个模板）
 /Users/sundanian/.myagents/projects/mino/.claude/skills/planning-with-files/scripts/init.sh
-
-# 2. 编辑 docs/prompt.md - 定义项目边界
-# 3. 编辑 docs/plans.md - 拆解任务 + 验收命令
-
-# 4. 说"开始执行" - AI 按 plans.md 执行，每步验证
 ```
+
+**然后**：
+
+| 步骤 | AI 动作 | 用户动作 |
+|------|--------|----------|
+| 2 | 编辑 `docs/prompt.md` 草案 | 审阅需求边界 |
+| 3 | 编辑 `docs/plans.md` 草案 | 审阅任务拆解 |
+| 4 | **暂停，等待确认** | 说"开始执行"或修改 |
+| 5 | 按 `plans.md` 执行 | 等待完成 |
+
+> **强制规则**：AI 编辑完草案后必须暂停等用户确认，禁止直接执行
 
 ## FIRST: Check for Previous Session (v2.2.0)
 
@@ -165,6 +171,20 @@ Filesystem = Disk (persistent, unlimited)
 | `progress.md` | Session log, test results | Throughout session |
 
 ## Critical Rules
+
+### 0. Confirm Before Execute（五文件流强制）
+
+**适用于 Derrick Choi 五文件流**：
+
+| 步骤 | AI 必须做 | 禁止 |
+|------|----------|------|
+| 编辑草案后 | 展示 `prompt.md` + `plans.md` | 直接执行 |
+| 等待确认 | 用 AskUserQuestion 或明确询问 | 假设用户同意 |
+| 用户确认后 | 才能开始执行 | 边改边跑 |
+
+> **规则**：AI 编辑完 `prompt.md` 和 `plans.md` 草案后，必须暂停等用户确认
+>
+> **目的**：防止 AI 自己理解需求、跑偏
 
 ### 1. Create Plan First
 Never start a complex task without `task_plan.md`. Non-negotiable.

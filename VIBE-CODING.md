@@ -1,3 +1,10 @@
+---
+pos: VIBE-CODING.md
+input: Vibe Coding 理念
+output: mino 项目文档架构说明
+update: 架构变更时更新
+---
+
 # Vibe Coding 在 mino 的实践
 
 > 来源：Vibe Coding 分层文档架构
@@ -124,7 +131,7 @@ hooks:
 ### 文档更新规则
 
 1. **改了代码必须更新对应文档**
-2. **新建模块必须加 README.md**
+2. **新建模块必须加 CLAUDE.md**
 3. **删除文件必须从索引移除**
 
 ### 文件头规范
@@ -198,13 +205,13 @@ update: 更新方式（自动/手动）
 mino/
 ├── CLAUDE.md                        # 项目级入口
 ├── memory/
-│   ├── README.md                    # 模块级：记忆系统
+│   ├── CLAUDE.md                    # 模块级：记忆系统
 │   └── .abstract                    # L0 索引
 ├── tasks/
-│   └── README.md                    # 模块级：任务库
+│   └── CLAUDE.md                    # 模块级：任务库
 └── .claude/
     ├── rules/
-    │   ├── README.md                # 模块级：规则库
+    │   ├── CLAUDE.md                # 模块级：规则库
     │   └── 06-NOW.md                # 会话启动
     └── commands/
         ├── wake.md                  # /wake
@@ -217,9 +224,9 @@ mino/
 ## 🔗 相关文档
 
 - `CLAUDE.md` - 项目入口
-- `memory/README.md` - 记忆系统
-- `tasks/README.md` - 任务库
-- `.claude/rules/README.md` - 系统规则
+- `memory/CLAUDE.md` - 记忆系统
+- `tasks/CLAUDE.md` - 任务库
+- `.claude/rules/CLAUDE.md` - 系统规则
 
 ---
 

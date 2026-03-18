@@ -25,21 +25,31 @@ update: 手动（流程变更时）
 
 ---
 
-## 🚀 会话启动
+## 🚀 会话启动 (Proactive 模式)
 
-1. git pull
-2. 读本文件
-3. 读 `memory/.abstract` (L0 索引)
-4. "醒了，等你指示"
+1. **git pull** — 同步代码
+2. **读本文件** — 加载启动规则
+3. **读 `memory/.abstract`** — L0 索引 + 对齐检查
+4. **Heartbeat 扫描** — 读 `HEARTBEAT.md`，检查关注事项
+   - Daily 堆积？→ 提醒"观察"
+   - P1 项目停滞？→ 询问是否继续
+   - Buffer 遗留？→ "上次说到 [X]，继续？"
+5. **自我修复检查** — 快速扫描 `SELF-HEALING.md`
+6. **WAL 记录** — 追加 `START` 事件到 `WAL.md`
+7. **Working Buffer 激活** — 加载当前上下文
+8. **"醒了，等你指示"** — 如有关注事项，主动列出
 
 ---
 
 ## 🔧 会话结束
 
-- 有值得记录的事实 → 说"观察"
-- 有值得长期记住的 → 汇总到 04-MEMORY
-- 年老师特质有新变化 → 更新 03-USER
-- git commit && git push
+1. **WAL Checkpoint** — 追加会话总结到 `WAL.md`
+2. **Working Buffer 更新** — 记录当前状态（如需继续）
+3. **问："需要记住什么？"** — 如有值得记录的 → 触发"观察"
+4. **有值得长期记住的** → 更新 `04-MEMORY.md`
+5. **年老师特质有新变化** → 更新 `03-USER.md`
+6. **git commit && git push**
+7. **Working Buffer 清理** — 标记为 resolved（如会话完成）
 
 ---
 
@@ -75,13 +85,35 @@ memory/
 
 ---
 
+## 🤖 Proactive 机制（2026-03-18 上线）
+
+> 借鉴 OpenClaw proactive-agent 技能，实现主动式记忆管理
+
+### 核心组件
+
+| 组件 | 文件 | 作用 |
+|------|------|------|
+| **HEARTBEAT** | `memory/state/HEARTBEAT.md` | 启动时扫描，主动提醒关注事项 |
+| **WAL** | `memory/state/WAL.md` | 预写日志，关键事件持久化 |
+| **WORKING-BUFFER** | `memory/state/WORKING-BUFFER.md` | 会话上下文 + 中断恢复 |
+| **SELF-HEALING** | `memory/state/SELF-HEALING.md` | 系统自检修复 |
+
+### 启动流程变化
+
+```
+旧：git pull → 06-NOW → .abstract → "醒了"
+新：git pull → 06-NOW → .abstract → HEARTBEAT → SELF-HEALING → WAL → Buffer → "醒了" + 主动提醒
+```
+
+---
+
 *边跑边调*
 
 ---
 
-## 💬 当前讨论状态（2026-03-06）
+## 💬 当前讨论状态（2026-03-18）
 
-### 双文件夹定位
+### 双文件夹定位（2026-03-06 确立）
 
 | 维度 | **nomi** | **Mino** |
 |------|---------|----------|
@@ -96,3 +128,15 @@ memory/
 - nomi 保持精简，不追求内容完整
 - 业务只在 Mino 沉淀
 - 两边独立演进，互不干扰
+
+### Proactive 机制（2026-03-18 落地）
+
+**已完成 Phase 1**:
+- ✅ 创建 HEARTBEAT.md、WAL.md、WORKING-BUFFER.md、SELF-HEALING.md
+- ✅ 升级 .abstract 加入对齐检查
+- ✅ 更新 06-NOW.md 启动/结束流程
+
+**待测试**:
+- Phase 1 运行效果
+- 根据体验调优
+- 考虑是否需要自动化（定时任务）

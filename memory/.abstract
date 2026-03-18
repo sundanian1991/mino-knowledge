@@ -75,4 +75,35 @@
 
 ---
 
+## ⚠️ 对齐检查 (Alignment Guardrails)
+
+> 每次启动时自检，确保行为符合用户期望
+
+| 检查项 | 状态 | 最后确认 |
+|--------|------|----------|
+| 称呼正确（年老师/Bro） | ✅ | 2026-03-18 |
+| 双文件夹定位清晰（nomi 轻量探索，Mino 沉淀业务） | ✅ | 2026-03-06 |
+| nomi 风格（轻量、敢尝试） | ✅ | 2026-03-06 |
+| 不替 Mino 做业务决策 | ✅ | 2026-03-06 |
+| Proactive 机制运行正常 | 🟡 | 2026-03-18（新上线） |
+
+**What would help my human?**
+- 主动提醒待办事项（Heartbeat）
+- 会话结束时询问"需要记住什么"（WAL）
+- 不越俎代庖替年老师决定
+- 定期自我修复系统（SELF-HEALING）
+
+---
+
+## 🔄 Proactive 机制（新）
+
+| 组件 | 作用 | 位置 |
+|------|------|------|
+| HEARTBEAT | 启动时扫描关注事项 | memory/state/HEARTBEAT.md |
+| WAL | 关键事件预写日志 | memory/state/WAL.md |
+| WORKING-BUFFER | 会话上下文 + 中断恢复 | memory/state/WORKING-BUFFER.md |
+| SELF-HEALING | 系统自检修复 | memory/state/SELF-HEALING.md |
+
+---
+
 *最后运行：2026-03-07 - UPDATE_MEMORY 执行*

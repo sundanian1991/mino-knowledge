@@ -52,6 +52,7 @@ update: 会话中实时更新，结束时 checkpoint
 | 时间 | 事件 | 状态 |
 |------|------|------|
 | 2026-03-18T21:50 | Phase 1 开始 | checkpoint |
+| 2026-03-18T22:00 | Phase 1 完成，已提交 | checkpoint |
 
 ---
 

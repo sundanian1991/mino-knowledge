@@ -1,7 +1,7 @@
 # 记忆索引 (Memory Abstract)
 
 > L0 层索引 - 每次启动只读这个 (~100 tokens)
-> 更新时间：2026-03-07
+> 更新时间：2026-03-19
 
 ---
 
@@ -30,6 +30,9 @@
 | Vibe Coding 分层文档 | ✅ 已完成 | 2026-03-07 | 根目录/ |
 | 分形自指文档系统 | ✅ 已完成 | 2026-03-07 | 根目录/.claude/workspace/.scripts/ |
 | Token 消耗优化 | ✅ 已完成 | 2026-03-07 | skills/rules/全局 CLAUDE.md |
+| Proactive 机制 Phase 1 | ✅ 已完成 | 2026-03-18 | memory/state/ |
+
+**Topics**：读 `memory/topics/*.md`
 
 **详情**：读 `memory/P1-active/projects.md`
 
@@ -50,6 +53,17 @@
 ### Weekly (本月)
 - 2026-W08.md (2026-02-22 至 2026-03-01)
 - 2026-W09.md (2026-03-02 至 2026-03-06)
+
+---
+
+## 📂 Topics（项目知识库）
+
+| Topic | 描述 | 位置 |
+|-------|------|------|
+| Proactive 机制 | Heartbeat + WAL + Buffer + Self-Healing | `memory/topics/proactive-agent.md` |
+| 双文件夹架构 | nomi vs Mino 差异化定位 | `memory/topics/dual-folder-architecture.md` |
+| 分形文档系统 | Vibe Coding 三层文档架构 | `memory/topics/fractal-docs-system.md` |
+| 定价委员会 | 京东供应商管理演示文稿 | `memory/topics/pricing-committee.md` |
 
 ---
 
@@ -85,7 +99,7 @@
 | 双文件夹定位清晰（nomi 轻量探索，Mino 沉淀业务） | ✅ | 2026-03-06 |
 | nomi 风格（轻量、敢尝试） | ✅ | 2026-03-06 |
 | 不替 Mino 做业务决策 | ✅ | 2026-03-06 |
-| Proactive 机制运行正常 | 🟡 | 2026-03-18（新上线） |
+| Proactive 机制运行正常 | ✅ | 2026-03-19 |
 
 **What would help my human?**
 - 主动提醒待办事项（Heartbeat）
@@ -106,4 +120,4 @@
 
 ---
 
-*最后运行：2026-03-07 - UPDATE_MEMORY 执行*
+*最后运行：2026-03-19 - UPDATE_MEMORY 执行*

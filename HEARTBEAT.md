@@ -1,5 +1,50 @@
 # HEARTBEAT.md
 
-# Keep this file empty (or with only comments) to skip heartbeat API calls.
+# 心跳检查任务（2-4 次/天）
 
-# Add tasks below when you want the agent to check something periodically.
+## 📝 自动记录对话（重要）
+
+**触发时机**：每次 heartbeat 检查
+
+**检查内容**：
+1. 读取今天的 `memory/YYYY-MM-DD.md`（如果不存在则创建）
+2. 检查对话中是否有：
+   - 新的待办事项
+   - 重要决策
+   - 供应商相关事项
+   - 问题/风险
+
+**执行动作**：
+1. 如果有新事项 → 写入 `memory/YYYY-MM-DD.md`
+2. 提取待办 → 更新 `todo.md` 的"进行中"区
+3. 如果事项已完成 → 标记为 Done
+
+---
+
+## 📊 每日京 me 消息检查
+
+**触发时机**：早上、下午、晚上各一次（9 点、15 点、21 点左右）
+
+**检查内容**：
+1. 是否有新增待办事项
+2. 是否有需要紧急处理的 @提醒
+3. 是否有审批流程需要处理
+
+**执行动作**：
+- 有 → 记录到 `memory/YYYY-MM-DD.md`
+- 无 → HEARTBEAT_OK
+
+---
+
+## 🌙 凌晨 1 点自动复盘（已配置 cron）
+
+**执行时间**：每天凌晨 1 点
+**执行内容**：自动总结今日工作并生成日报
+
+---
+
+## ⚠️ 不要做的事
+
+- 不要在 heartbeat 里主动发起对话
+- 不要重复检查同一内容
+- 如果没有新事项 → 直接回复 HEARTBEAT_OK

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "self-improving-agent": {
+      "version": "3.0.5",
+      "installedAt": 1774015385963
+    },
+    "getnote": {
+      "version": "1.5.1",
+      "installedAt": 1774015441447
+    },
+    "capability-evolver": {
+      "version": "1.39.0",
+      "installedAt": 1774427884246
+    }
+  }
+}
